@@ -1,6 +1,13 @@
-# Emacs temporal files
+## 'results' folder conatining the script output
+
+results/*
+
+## Emacs temporal files
+
 \#*
 .#*
+*~
 
-# LibreOffice lock files
+## LibreOffice lock files
+
 .~lock*
