@@ -91,6 +91,14 @@ if [ $build -eq 1 ]; then
     ## ---------
 
 
+    ## Create value specifications
+
+    robot template --template template-value_specifications.tsv \
+	  --prefixes prefixes.json \
+	  --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
+	  --output results/template_ValueSpecifications.owl
+    
+
     ## Create data sets
 
     robot template --template template-data_sets.tsv \
@@ -103,6 +111,7 @@ if [ $build -eq 1 ]; then
     ## ----------------------
 
     robot merge --input results/template_DataSets.owl \
+	  --input results/template_ValueSpecifications.owl \
 	  --output results/template.owl
 
     
