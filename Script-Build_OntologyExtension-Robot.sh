@@ -87,13 +87,6 @@ if [ $build -eq 1 ]; then
     cd ../../../
 
 
-    ## PREFIXES
-    ## --------
-   
-    robot --prefix "template: http://w3id.org/rdfbones/ext/template/" \
-	  export-prefixes --output results/prefixes.json
-
-
     ## TEMPLATES
     ## ---------
 
@@ -101,7 +94,7 @@ if [ $build -eq 1 ]; then
     ## Create data sets
 
     robot template --template template-data_sets.tsv \
-	  --prefixes results/prefixes.json \
+	  --prefixes prefixes.json \
 	  --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
 	  --output results/template_DataSets.owl
 
