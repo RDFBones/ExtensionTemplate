@@ -97,6 +97,18 @@ if [ $build -eq 1 ]; then
 	  --prefixes prefixes.json \
 	  --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
 	  --output results/template_ValueSpecifications.owl
+
+    robot merge --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
+	  --input results/template_ValueSpecifications.owl \
+	  --output results/merged_Core-VS.owl
+
+
+    ## Create data items
+
+    robot template --template template-data_items.tsv \
+	  --prefixes prefixes.json \
+	  --input results/merged_Core-VS.owl \
+	  --output results/template_DataItems.owl
     
 
     ## Create data sets
