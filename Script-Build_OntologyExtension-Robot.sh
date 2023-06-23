@@ -109,21 +109,39 @@ if [ $build -eq 1 ]; then
 	  --prefixes prefixes.json \
 	  --input results/merged_Core-VS.owl \
 	  --output results/template_DataItems.owl
+
+    robot merge --input results/merged_Core-VS.owl \
+	  --input results/template_DataItems.owl \
+	  --output results/merged_Core_VS_DI.owl
     
 
     ## Create data sets
 
     robot template --template template-data_sets.tsv \
 	  --prefixes prefixes.json \
-	  --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
+	  --input results/merged_Core_VS_DI.owl \
 	  --output results/template_DataSets.owl
+
+    robot merge --input results/merged_Core_VS_DI.owl \
+	  --input results/template_DataSets.owl \
+	  --output results/merged_Core_VS_DI_DS.owl
+
+    ## Create assays
+
+    robot template --template template_assays.tsv \
+	  --prefixes prefixes.json \
+	  --input results/merged_Core_VS_DI_DS.owl \
+	  --output results/template_assays.owl
+	  
 
 
     ## MERGE TEMPLATE OUTPUTS
     ## ----------------------
 
-    robot merge --input results/template_DataSets.owl \
-	  --input results/template_ValueSpecifications.owl \
+    robot merge --input results/template_ValueSpecifications.owl \
+	  --input results/template_DataItems.owl \
+	  --input results/template_DataSets.owl \
+	  --input results/template_assays.owl \
 	  --output results/template.owl
 
     
