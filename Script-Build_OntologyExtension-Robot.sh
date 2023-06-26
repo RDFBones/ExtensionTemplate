@@ -126,13 +126,25 @@ if [ $build -eq 1 ]; then
 	  --input results/template_DataSets.owl \
 	  --output results/merged_Core_VS_DI_DS.owl
 
+    
     ## Create assays
 
-    robot template --template template_assays.tsv \
+    robot template --template template-assays.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged_Core_VS_DI_DS.owl \
 	  --output results/template_assays.owl
-	  
+
+    robot merge --input results/merged_Core_VS_DI_DS.owl \
+	  --input results/template_assays.owl \
+	  --output results/merged_Core_VS_DI_DS_AS.owl
+
+
+    ## Create data transformations
+
+    robot template --template template-data_transformations.tsv \
+	  --prefixes prefixes.json \
+	  --input results/merged_Core_VS_DI_DS_AS.owl \
+	  --output results/template_DataTransformations.owl
 
 
     ## MERGE TEMPLATE OUTPUTS
