@@ -100,103 +100,127 @@ if [ $build -eq 1 ]; then
 
     robot merge --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
 	  --input results/template_ValueSpecifications.owl \
-	  --output results/merged_Core-VS.owl
+	  --output results/merged.owl
 
 
     ## Create data items
 
     robot template --template template-data_items.tsv \
 	  --prefixes prefixes.json \
-	  --input results/merged_Core-VS.owl \
+	  --input results/merged.owl \
 	  --output results/template_DataItems.owl
 
-    robot merge --input results/merged_Core-VS.owl \
+    robot merge --input results/merged.owl \
 	  --input results/template_DataItems.owl \
-	  --output results/merged_Core_VS_DI.owl
+	  --output results/merged.owl
     
 
     ## Create data sets
 
     robot template --template template-data_sets.tsv \
 	  --prefixes prefixes.json \
-	  --input results/merged_Core_VS_DI.owl \
+	  --input results/merged.owl \
 	  --output results/template_DataSets.owl
 
-    robot merge --input results/merged_Core_VS_DI.owl \
+    robot merge --input results/merged.owl \
 	  --input results/template_DataSets.owl \
-	  --output results/merged_Core_VS_DI_DS.owl
+	  --output results/merged.owl
 
     
     ## Create assays
 
     robot template --template template-assays.tsv \
 	  --prefixes prefixes.json \
-	  --input results/merged_Core_VS_DI_DS.owl \
-	  --output results/template_assays.owl
+	  --input results/merged.owl \
+	  --output results/template_Assays.owl
 
-    robot merge --input results/merged_Core_VS_DI_DS.owl \
-	  --input results/template_assays.owl \
-	  --output results/merged_Core_VS_DI_DS_AS.owl
+    robot merge --input results/merged.owl \
+	  --input results/template_Assays.owl \
+	  --output results/merged.owl
 
 
     ## Create data transformations
 
     robot template --template template-data_transformations.tsv \
 	  --prefixes prefixes.json \
-	  --input results/merged_Core_VS_DI_DS_AS.owl \
+	  --input results/merged.owl \
 	  --output results/template_DataTransformations.owl
 
-    robot merge --input results/merged_Core_VS_DI_DS_AS.owl \
+    robot merge --input results/merged.owl \
 	  --input results/template_DataTransformations.owl \
-	  --output results/merged_Core_VS_DI_DS_AS_DT.owl
+	  --output results/merged.owl
 
 
     ## Create Conclusion Processes
 
     robot template --template template-conclusion_processes.tsv \
 	  --prefixes prefixes.json \
-	  --input results/merged_Core_VS_DI_DS_AS_DT.owl \
+	  --input results/merged.owl \
 	  --output results/template_ConclusionProcesses.owl
 
-    robot merge --input results/merged_Core_VS_DI_DS_AS_DT.owl \
+    robot merge --input results/merged.owl \
 	  --input results/template_ConclusionProcesses.owl \
-	  --output results/merged_Core_VS_DI_DS_AS_DT_CP.owl
+	  --output results/merged.owl
 
 
     ## Create Study Design Execution Processes
 
     robot template --template template-study_design_executions.tsv \
 	  --prefixes prefixes.json \
-	  --input results/merged_Core_VS_DI_DS_AS_DT_CP.owl \
+	  --input results/merged.owl \
 	  --output results/template_StudyDesignExecutions.owl
 
-    robot merge --input results/merged_Core_VS_DI_DS_AS_DT_CP.owl \
+    robot merge --input results/merged.owl \
 	  --input results/template_StudyDesignExecutions.owl \
-	  --output results/merged_Core_VS_DI_DS_AS_DT_CP_EP.owl
+	  --output results/merged.owl
+
+
+    ## Create Protocols
+
+    robot template --template template-protocols.tsv \
+	  --prefixes prefixes.json \
+	  --input results/merged.owl \
+	  --output results/template_Protocols.owl
+
+    robot merge --input results/merged.owl \
+	  --input results/template_Protocols.owl \
+	  --output results/merged.owl
+
+
+    ## Create Study Designs
+
+    robot template --template template-study_designs.tsv \
+	  --prefixes prefixes.json \
+	  --input results/merged.owl \
+	  --output results/template_StudyDesigns.owl
+
+    robot merge --input results/merged.owl \
+	  --input results/template_StudyDesigns.owl \
+	  --output results/merged.owl
 
 
     ## Create Planning Processes
 
     robot template --template template-planning.tsv \
 	  --prefixes prefixes.json \
-	  --input results/merged_Core_VS_DI_DS_AS_DT_CP_EP.owl \
+	  --input results/merged.owl \
 	  --output results/template_Planning.owl
 
-    robot merge --input results/merged_Core_VS_DI_DS_AS_DT_CP_EP.owl \
+    robot merge --input results/merged.owl \
 	  --input results/template_Planning.owl \
-	  --output results/merged_Core_VS_DI_DS_AS_DT_CP_EP_PP.owl
+	  --output results/merged.owl
 
 
     ## Create Investigation Processes
 
     robot template --template template-investigations.tsv \
 	  --prefixes prefixes.json \
-	  --input results/merged_Core_VS_DI_DS_AS_DT_CP_EP_PP.owl \
+	  --input results/merged.owl \
 	  --output results/template_Investigations.owl
 
-    robot merge --input results/merged_Core_VS_DI_DS_AS_DT_CP_EP_PP.owl \
+    robot merge --input results/merged.owl \
 	  --input results/template_Investigations.owl \
-	  --output results/merged_Core_VS_DI_DS_AS_DT_CP_EP_PP_IP.owl
+	  --output results/merged.owl
 
 
     ## MERGE TEMPLATE OUTPUTS
@@ -205,10 +229,12 @@ if [ $build -eq 1 ]; then
     robot merge --input results/template_ValueSpecifications.owl \
 	  --input results/template_DataItems.owl \
 	  --input results/template_DataSets.owl \
-	  --input results/template_assays.owl \
+	  --input results/template_Assays.owl \
 	  --input results/template_DataTransformations.owl \
 	  --input results/template_ConclusionProcesses.owl \
 	  --input results/template_StudyDesignExecutions.owl \
+	  --input results/template_Protocols.owl \
+	  --input results/template_StudyDesigns.owl \
 	  --input results/template_Planning.owl \
 	  --input results/template_Investigations.owl \
 	  --output results/template.owl
