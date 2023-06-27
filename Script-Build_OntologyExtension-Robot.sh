@@ -146,6 +146,58 @@ if [ $build -eq 1 ]; then
 	  --input results/merged_Core_VS_DI_DS_AS.owl \
 	  --output results/template_DataTransformations.owl
 
+    robot merge --input results/merged_Core_VS_DI_DS_AS.owl \
+	  --input results/template_DataTransformations.owl \
+	  --output results/merged_Core_VS_DI_DS_AS_DT.owl
+
+
+    ## Create Conclusion Processes
+
+    robot template --template template-conclusion_processes.tsv \
+	  --prefixes prefixes.json \
+	  --input results/merged_Core_VS_DI_DS_AS_DT.owl \
+	  --output results/template_ConclusionProcesses.owl
+
+    robot merge --input results/merged_Core_VS_DI_DS_AS_DT.owl \
+	  --input results/template_ConclusionProcesses.owl \
+	  --output results/merged_Core_VS_DI_DS_AS_DT_CP.owl
+
+
+    ## Create Study Design Execution Processes
+
+    robot template --template template-study_design_executions.tsv \
+	  --prefixes prefixes.json \
+	  --input results/merged_Core_VS_DI_DS_AS_DT_CP.owl \
+	  --output results/template_StudyDesignExecutions.owl
+
+    robot merge --input results/merged_Core_VS_DI_DS_AS_DT_CP.owl \
+	  --input results/template_StudyDesignExecutions.owl \
+	  --output results/merged_Core_VS_DI_DS_AS_DT_CP_EP.owl
+
+
+    ## Create Planning Processes
+
+    robot template --template template-planning.tsv \
+	  --prefixes prefixes.json \
+	  --input results/merged_Core_VS_DI_DS_AS_DT_CP_EP.owl \
+	  --output results/template_Planning.owl
+
+    robot merge --input results/merged_Core_VS_DI_DS_AS_DT_CP_EP.owl \
+	  --input results/template_Planning.owl \
+	  --output results/merged_Core_VS_DI_DS_AS_DT_CP_EP_PP.owl
+
+
+    ## Create Investigation Processes
+
+    robot template --template template-investigations.tsv \
+	  --prefixes prefixes.json \
+	  --input results/merged_Core_VS_DI_DS_AS_DT_CP_EP_PP.owl \
+	  --output results/template_Investigations.owl
+
+    robot merge --input results/merged_Core_VS_DI_DS_AS_DT_CP_EP_PP.owl \
+	  --input results/template_Investigations.owl \
+	  --output results/merged_Core_VS_DI_DS_AS_DT_CP_EP_PP_IP.owl
+
 
     ## MERGE TEMPLATE OUTPUTS
     ## ----------------------
@@ -154,6 +206,11 @@ if [ $build -eq 1 ]; then
 	  --input results/template_DataItems.owl \
 	  --input results/template_DataSets.owl \
 	  --input results/template_assays.owl \
+	  --input results/template_DataTransformations.owl \
+	  --input results/template_ConclusionProcesses.owl \
+	  --input results/template_StudyDesignExecutions.owl \
+	  --input results/template_Planning.owl \
+	  --input results/template_Investigations.owl \
 	  --output results/template.owl
 
     
