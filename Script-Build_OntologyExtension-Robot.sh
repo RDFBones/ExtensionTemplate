@@ -91,14 +91,26 @@ if [ $build -eq 1 ]; then
     ## ---------
 
 
+    ## Create category labels
+
+    robot template --template template-category_labels.tsv \
+	  --prefixes prefixes.json \
+	  --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
+	  --output results/template_CategoryLabels.owl
+
+    robot merge --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
+	  --input results/template_CategoryLabels.owl \
+	  --output results/merged.owl
+
+
     ## Create value specifications
 
     robot template --template template-value_specifications.tsv \
 	  --prefixes prefixes.json \
-	  --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
+	  --input results/merged.owl \
 	  --output results/template_ValueSpecifications.owl
 
-    robot merge --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
+    robot merge --input results/merged.owl \
 	  --input results/template_ValueSpecifications.owl \
 	  --output results/merged.owl
 
@@ -226,7 +238,8 @@ if [ $build -eq 1 ]; then
     ## MERGE TEMPLATE OUTPUTS
     ## ----------------------
 
-    robot merge --input results/template_ValueSpecifications.owl \
+    robot merge --input results/template_CategoryLabels.owl \
+	  --input results/template_ValueSpecifications.owl \
 	  --input results/template_DataItems.owl \
 	  --input results/template_DataSets.owl \
 	  --input results/template_Assays.owl \
