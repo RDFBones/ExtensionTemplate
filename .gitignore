@@ -1,0 +1,7 @@
+## Exclude files from the 'results' folder which are the output of the ROBOT script
+
+results/*
+
+## Exclude temporary files
+
+*~
