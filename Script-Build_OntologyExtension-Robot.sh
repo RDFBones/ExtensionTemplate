@@ -86,6 +86,17 @@ if [ $build -eq 1 ]; then
 
     cd ../../../
 
+    ## Add additional build instructions as exemplified for the core ontology above
+    ## ****************************************************************************
+
+    ## Merge dependencies
+
+    robot merge --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
+	  --output results/dependencies.owl
+    
+    ## Add additional dependencies files as input
+    ## ******************************************
+
 
     ## TEMPLATES
     ## ---------
@@ -95,7 +106,7 @@ if [ $build -eq 1 ]; then
 
     robot template --template template-category_labels.tsv \
 	  --prefixes prefixes.json \
-	  --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
+	  --input results/dependencies.owl \
 	  --output results/template_CategoryLabels.owl
 
     robot merge --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
