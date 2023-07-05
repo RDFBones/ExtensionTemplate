@@ -245,29 +245,29 @@ if [ $build -eq 1 ]; then
 	  --input results/template_Investigations.owl \
 	  --output results/merged.owl
 
+    
+    ## CLEANUP TEMPORARY FILES
+    ## -----------------------
 
-    ## MERGE TEMPLATE OUTPUTS
-    ## ----------------------
+    if [ $cleanup -eq 1 ]; then
+	cd results
+	find . -not -regex "./merged.owl" -delete
+	cd ..
+    fi
 
-    robot merge --input results/template_CategoryLabels.owl \
-	  --input results/template_ValueSpecifications.owl \
-	  --input results/template_DataItems.owl \
-	  --input results/template_DataSets.owl \
-	  --input results/template_Assays.owl \
-	  --input results/template_DataTransformations.owl \
-	  --input results/template_ConclusionProcesses.owl \
-	  --input results/template_StudyDesignExecutions.owl \
-	  --input results/template_Protocols.owl \
-	  --input results/template_StudyDesigns.owl \
-	  --input results/template_Planning.owl \
-	  --input results/template_Investigations.owl \
-	  --output results/template.owl
+
+    ## CONSISTENCY TEST
+    ## ----------------
+
+    robot reason --reasoner ELK \
+	  --input results/merged.owl \
+	  -D results/debug.owl
 
     
     ## ANNOTATE OUTPUT
     ## ---------------
 
-    robot annotate --input results/template.owl \
+    robot annotate --input results/merged.owl \
 	  --remove-annotations \
 	  --ontology-iri "http://w3id.org/rdfbones/ext/template/latest/template.owl" \
 	  --version-iri "http://w3id.org/rdfbones/ext/template/v0-1/template.owl" \
@@ -281,13 +281,16 @@ if [ $build -eq 1 ]; then
 	  --language-annotation dc:title "RDFBones ontology extension template" en \
 	  --output results/template.owl
 
+    ## Change annotations to describe your extension and change file name in the final output statement.
+    ## *************************************************************************************************
 
-    ## CONSISTENCY TEST
-    ## ----------------
+    
+    ## CLEANUP TEMPORARY FILES
+    ## -----------------------
 
-    robot reason --reasoner ELK \
-	  --input results/template.owl \
-	  -D results/debug.owl
+    if [ $cleanup -eq 1 ]; then
+	rm results/merged.owl
+    fi
 
 fi
 
@@ -299,18 +302,12 @@ fi
 ## CLEANUP TEMPORARY FILES IN DEPENDENCIES
 ## ---------------------------------------
 
+## Remove temporary build files in RDFBones core ontology
+
 FILE=dependencies/RDFBones-O/robot/results/
 if [ -f "$FILE" ]; then
     rm -r dependencies/RDFBones-O/robot/results/
 fi
 
-
-## CLEANUP TEMPORARY FILES
-## -----------------------
-
-
-if [ $cleanup -eq 1 ]; then
-    cd results
-    find . -not -regex "./template.owl" -delete
-    cd ..
-fi
+## Add cleanup commands for additional dependencies as exemplified above for the RDFBones core ontology.
+## *****************************************************************************************************
