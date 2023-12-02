@@ -71,6 +71,7 @@ fi
 if [ $update -eq 1 ]; then
     git submodule init
     git submodule update
+    echo "Updating git submodules"
 fi
 
 
@@ -82,6 +83,8 @@ if [ $build -eq 1 ]; then
 
     ## DEPENDENCIES
     ## ------------
+
+    echo "Building dependencies"
 
     ## Build core ontology
 
@@ -96,6 +99,8 @@ if [ $build -eq 1 ]; then
 
     ## Merge dependencies
 
+    echo "Merging dependencies"
+
     robot merge --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
 	  --output results/dependencies.owl
     
@@ -106,6 +111,8 @@ if [ $build -eq 1 ]; then
     ## TEMPLATES
     ## ---------
 
+    
+    echo "Processing category labels template"
 
     ## Create category labels
 
@@ -114,6 +121,8 @@ if [ $build -eq 1 ]; then
 	  --input results/dependencies.owl \
 	  --output results/template_CategoryLabels.owl
 
+    echo "Merging category labels"
+
     robot merge --input results/dependencies.owl \
 	  --input results/template_CategoryLabels.owl \
 	  --output results/merged.owl
@@ -121,10 +130,14 @@ if [ $build -eq 1 ]; then
 
     ## Create value specifications
 
+    echo "Processing value specifications template"
+
     robot template --template template-value_specifications.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_ValueSpecifications.owl
+
+    echo "Merging value specifications"
 
     robot merge --input results/merged.owl \
 	  --input results/template_ValueSpecifications.owl \
@@ -137,10 +150,14 @@ if [ $build -eq 1 ]; then
 
     ## Create data items
 
+    echo "Processing data items template"
+
     robot template --template template-data_items.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_DataItems.owl
+
+    echo "Merging data items"
 
     robot merge --input results/merged.owl \
 	  --input results/template_DataItems.owl \
@@ -149,10 +166,14 @@ if [ $build -eq 1 ]; then
 
     ## Create data sets
 
+    echo "Processing data sets template"
+
     robot template --template template-data_sets.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_DataSets.owl
+
+    echo "Merging data sets"
 
     robot merge --input results/merged.owl \
 	  --input results/template_DataSets.owl \
@@ -165,10 +186,14 @@ if [ $build -eq 1 ]; then
     
     ## Create assays
 
+    echo "Processing assays template"
+
     robot template --template template-assays.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_Assays.owl
+
+    echo "Merging assays"
 
     robot merge --input results/merged.owl \
 	  --input results/template_Assays.owl \
@@ -197,10 +222,14 @@ if [ $build -eq 1 ]; then
 
     ## Create Conclusion Processes
 
+    echo "Processing conlusion processes template"
+
     robot template --template template-conclusion_processes.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_ConclusionProcesses.owl
+
+    echo "Merging conclusion processes"
 
     robot merge --input results/merged.owl \
 	  --input results/template_ConclusionProcesses.owl \
@@ -213,10 +242,14 @@ if [ $build -eq 1 ]; then
 
     ## Create Study Design Execution Processes
 
+    echo "Processing study design execution processes template"
+
     robot template --template template-study_design_executions.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_StudyDesignExecutions.owl
+
+    echo "Merging study design execution processes"
 
     robot merge --input results/merged.owl \
 	  --input results/template_StudyDesignExecutions.owl \
@@ -229,10 +262,14 @@ if [ $build -eq 1 ]; then
 
     ## Create Protocols
 
+    echo "Processing protocols template"
+
     robot template --template template-protocols.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_Protocols.owl
+
+    echo "Merging protocols"
 
     robot merge --input results/merged.owl \
 	  --input results/template_Protocols.owl \
@@ -245,10 +282,14 @@ if [ $build -eq 1 ]; then
 
     ## Create Study Designs
 
+    echo "Processing study designs template"
+
     robot template --template template-study_designs.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_StudyDesigns.owl
+
+    echo "Merging study designs"
 
     robot merge --input results/merged.owl \
 	  --input results/template_StudyDesigns.owl \
@@ -261,10 +302,14 @@ if [ $build -eq 1 ]; then
 
     ## Create Planning Processes
 
+    echo "Processing planning processes template"
+
     robot template --template template-planning.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_Planning.owl
+
+    echo "Merging planning processes"
 
     robot merge --input results/merged.owl \
 	  --input results/template_Planning.owl \
@@ -277,10 +322,14 @@ if [ $build -eq 1 ]; then
 
     ## Create Investigation Processes
 
+    echo "Processing investigation processes template"
+
     robot template --template template-investigations.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_Investigations.owl
+
+    echo "Merging investigation processes"
 
     robot merge --input results/merged.owl \
 	  --input results/template_Investigations.owl \
@@ -307,12 +356,15 @@ if [ $build -eq 1 ]; then
     ## -----------------------
 
     if [ $cleanup -eq 1 ]; then
+	echo "Cleaning up temporary files"
 	find . -not -regex ./"$output" -delete
     fi
 
 
     ## CONSISTENCY TEST
     ## ----------------
+
+    echo "Testing consistency of output"
 
     robot reason --reasoner ELK \
 	  --input "$output" \
@@ -321,6 +373,8 @@ if [ $build -eq 1 ]; then
     
     ## ANNOTATE OUTPUT
     ## ---------------
+
+    echo "Annotating output"
 
     robot annotate --input "$output" \
 	  --remove-annotations \
@@ -344,6 +398,7 @@ if [ $build -eq 1 ]; then
     ## -----------------------
 
     if [ $cleanup -eq 1 ]; then
+	echo "Cleaning up temposrary files"
 	rm "$output"
     fi
 
@@ -358,6 +413,8 @@ fi
 
 ## CLEANUP TEMPORARY FILES IN DEPENDENCIES
 ## ---------------------------------------
+
+echo "Cleaning up temporary files in dependencies directories"
 
 ## Remove temporary build files in RDFBones core ontology
 
