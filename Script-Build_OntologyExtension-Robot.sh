@@ -317,7 +317,7 @@ if [ $build -eq 1 ]; then
 
     if [ $verbose -eq 1 ]; then
 
-	echo "Processing conlusion processes template"
+	echo "Processing conclusion processes template"
 
     fi
     
@@ -479,6 +479,36 @@ if [ $build -eq 1 ]; then
     robot merge --input results/extension.owl \
 	  --input results/template_Investigations.owl \
 	  --output results/extension.owl
+
+
+    ## Create Roles
+
+    if [ $verbose -eq 1 ]; then
+
+	echo "Processing roles template"
+
+    fi
+    
+    robot template --template template-roles.tsv \
+	  --prefixes prefixes.json \
+	  --input results/merged.owl \
+	  --output results/template_roles.owl
+
+    if [ $verbose -eq 1 ]; then
+
+	echo "Merging roles"
+
+    fi
+    
+    robot merge --input results/merged.owl \
+	  --input results/template_roles.owl \
+	  --output results/merged.owl
+
+    robot merge --input results/extension.owl \
+	  --input results/template_roles.owl \
+	  --output results/extension.owl
+
+    
 
 
     ## DEFINE OUTPUT FILE
