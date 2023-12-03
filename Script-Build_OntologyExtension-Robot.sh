@@ -22,6 +22,7 @@ export cleanup=0
 export update=0
 export build=0
 export full=0
+export verbose=0
 
 
 ## USAGE FUNCTION
@@ -35,13 +36,14 @@ function usage {
     echo "    -c          cleanup temporary files"
     echo "    -u          initialise/update submodules"
     echo "    -f          merge extension with the core ontology and all dependencies and output as one owl file"
+    echo "    -v          verbose mode"
     echo "    -h -?       print this help"
 
     exit
 
 }
 
-while getopts "bcuh?" opt; do
+while getopts "bcuvh?" opt; do
     case "$opt" in
 	c)
 	    cleanup=1
@@ -54,6 +56,9 @@ while getopts "bcuh?" opt; do
 	    ;;
 	f)
 	    full=1
+	    ;;
+	v)
+	    verbose=1
 	    ;;
 	?)
 	    usage
@@ -76,16 +81,26 @@ fi
 
 gitchk=$(git submodule foreach 'echo $sm_path `git rev-parse HEAD`')
 if [ -z "$gitchk" ]; then
+    
     update=1
-    echo "Initialising git submodules"
+    
 fi
 
 ## Initialise and update git submodules
 
 if [ $update -eq 1 ]; then
+
+    if [ $verbose -eq 1 ]; then
+	echo "Initialising git submodules"
+    fi
+    
     git submodule init
+
+    if [ $verbose -eq 1 ]; then
+	echo "Updating git submodules"
+    fi
+    
     git submodule update
-    echo "Updating git submodules"
 fi
 
 
@@ -98,7 +113,11 @@ if [ $build -eq 1 ]; then
     ## DEPENDENCIES
     ## ------------
 
-    echo "Building dependencies"
+    if [ $verbose -eq 1 ]; then
+
+	echo "Building dependencies"
+
+    fi
 
     ## Build core ontology
 
@@ -113,7 +132,11 @@ if [ $build -eq 1 ]; then
 
     ## Merge dependencies
 
-    echo "Merging dependencies"
+    if [ $verbose -eq 1 ]; then
+
+	echo "Merging dependencies"
+
+    fi
 
     robot merge --input dependencies/RDFBones-O/robot/results/rdfbones.owl \
 	  --output results/dependencies.owl
@@ -125,9 +148,12 @@ if [ $build -eq 1 ]; then
     ## TEMPLATES
     ## ---------
 
-    
-    echo "Processing category labels template"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Processing category labels template"
+
+    fi
+    
     ## Create category labels
 
     robot template --template template-category_labels.tsv \
@@ -135,8 +161,12 @@ if [ $build -eq 1 ]; then
 	  --input results/dependencies.owl \
 	  --output results/template_CategoryLabels.owl
 
-    echo "Merging category labels"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Merging category labels"
+
+    fi
+    
     robot merge --input results/dependencies.owl \
 	  --input results/template_CategoryLabels.owl \
 	  --output results/merged.owl
@@ -144,15 +174,23 @@ if [ $build -eq 1 ]; then
 
     ## Create value specifications
 
-    echo "Processing value specifications template"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Processing value specifications template"
+
+    fi
+    
     robot template --template template-value_specifications.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_ValueSpecifications.owl
 
-    echo "Merging value specifications"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Merging value specifications"
+
+    fi
+    
     robot merge --input results/merged.owl \
 	  --input results/template_ValueSpecifications.owl \
 	  --output results/merged.owl
@@ -164,15 +202,23 @@ if [ $build -eq 1 ]; then
 
     ## Create data items
 
-    echo "Processing data items template"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Processing data items template"
+
+    fi
+    
     robot template --template template-data_items.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_DataItems.owl
 
-    echo "Merging data items"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Merging data items"
+
+    fi
+    
     robot merge --input results/merged.owl \
 	  --input results/template_DataItems.owl \
 	  --output results/merged.owl
@@ -184,15 +230,23 @@ if [ $build -eq 1 ]; then
 
     ## Create data sets
 
-    echo "Processing data sets template"
+    if [ $verbose -eq 1 ]; then
+
+	echo "Processing data sets template"
+
+    fi
 
     robot template --template template-data_sets.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_DataSets.owl
 
-    echo "Merging data sets"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Merging data sets"
+
+    fi
+    
     robot merge --input results/merged.owl \
 	  --input results/template_DataSets.owl \
 	  --output results/merged.owl
@@ -204,15 +258,23 @@ if [ $build -eq 1 ]; then
     
     ## Create assays
 
-    echo "Processing assays template"
+    if [ $verbose -eq 1 ]; then
+
+	echo "Processing assays template"
+
+    fi
 
     robot template --template template-assays.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_Assays.owl
 
-    echo "Merging assays"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Merging assays"
+
+    fi
+    
     robot merge --input results/merged.owl \
 	  --input results/template_Assays.owl \
 	  --output results/merged.owl
@@ -224,11 +286,23 @@ if [ $build -eq 1 ]; then
 
     ## Create data transformations
 
+    if [ $verbose -eq 1 ]; then
+
+	echo "Processing data transformations template"
+
+    fi
+    
     robot template --template template-data_transformations.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_DataTransformations.owl
 
+    if [ $verbose -eq 1 ]; then
+
+	echo "Merging data transformations"
+
+    fi
+    
     robot merge --input results/merged.owl \
 	  --input results/template_DataTransformations.owl \
 	  --output results/merged.owl
@@ -240,15 +314,23 @@ if [ $build -eq 1 ]; then
 
     ## Create Conclusion Processes
 
-    echo "Processing conlusion processes template"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Processing conlusion processes template"
+
+    fi
+    
     robot template --template template-conclusion_processes.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_ConclusionProcesses.owl
 
-    echo "Merging conclusion processes"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Merging conclusion processes"
+
+    fi
+    
     robot merge --input results/merged.owl \
 	  --input results/template_ConclusionProcesses.owl \
 	  --output results/merged.owl
@@ -260,15 +342,23 @@ if [ $build -eq 1 ]; then
 
     ## Create Study Design Execution Processes
 
-    echo "Processing study design execution processes template"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Processing study design execution processes template"
+
+    fi
+    
     robot template --template template-study_design_executions.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_StudyDesignExecutions.owl
 
-    echo "Merging study design execution processes"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Merging study design execution processes"
+
+    fi
+    
     robot merge --input results/merged.owl \
 	  --input results/template_StudyDesignExecutions.owl \
 	  --output results/merged.owl
@@ -280,14 +370,22 @@ if [ $build -eq 1 ]; then
 
     ## Create Protocols
 
-    echo "Processing protocols template"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Processing protocols template"
+
+    fi
+    
     robot template --template template-protocols.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_Protocols.owl
 
-    echo "Merging protocols"
+    if [ $verbose -eq 1 ]; then
+
+	echo "Merging protocols"
+
+    fi
 
     robot merge --input results/merged.owl \
 	  --input results/template_Protocols.owl \
@@ -300,14 +398,22 @@ if [ $build -eq 1 ]; then
 
     ## Create Study Designs
 
-    echo "Processing study designs template"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Processing study designs template"
+
+    fi
+    
     robot template --template template-study_designs.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_StudyDesigns.owl
 
-    echo "Merging study designs"
+    if [ $verbose -eq 1 ]; then
+
+	echo "Merging study designs"
+
+    fi
 
     robot merge --input results/merged.owl \
 	  --input results/template_StudyDesigns.owl \
@@ -320,15 +426,23 @@ if [ $build -eq 1 ]; then
 
     ## Create Planning Processes
 
-    echo "Processing planning processes template"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Processing planning processes template"
+
+    fi
+    
     robot template --template template-planning.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_Planning.owl
 
-    echo "Merging planning processes"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Merging planning processes"
+
+    fi
+    
     robot merge --input results/merged.owl \
 	  --input results/template_Planning.owl \
 	  --output results/merged.owl
@@ -340,15 +454,23 @@ if [ $build -eq 1 ]; then
 
     ## Create Investigation Processes
 
-    echo "Processing investigation processes template"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Processing investigation processes template"
+
+    fi
+    
     robot template --template template-investigations.tsv \
 	  --prefixes prefixes.json \
 	  --input results/merged.owl \
 	  --output results/template_Investigations.owl
 
-    echo "Merging investigation processes"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Merging investigation processes"
+
+    fi
+    
     robot merge --input results/merged.owl \
 	  --input results/template_Investigations.owl \
 	  --output results/merged.owl
@@ -374,7 +496,11 @@ if [ $build -eq 1 ]; then
     ## -----------------------
 
     if [ $cleanup -eq 1 ]; then
-	echo "Cleaning up temporary files"
+
+	if [ $verbose -eq 1 ]; then
+	    echo "Cleaning up temporary files"
+	fi
+	
 	find . -not -regex ./"$output" -delete
     fi
 
@@ -382,8 +508,12 @@ if [ $build -eq 1 ]; then
     ## CONSISTENCY TEST
     ## ----------------
 
-    echo "Testing consistency of output"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Testing consistency of output"
+
+    fi
+    
     robot reason --reasoner ELK \
 	  --input "$output" \
 	  -D debug.owl
@@ -392,8 +522,12 @@ if [ $build -eq 1 ]; then
     ## ANNOTATE OUTPUT
     ## ---------------
 
-    echo "Annotating output"
+    if [ $verbose -eq 1 ]; then
 
+	echo "Annotating output"
+
+    fi
+    
     robot annotate --input "$output" \
 	  --remove-annotations \
 	  --output "$output"
@@ -435,7 +569,11 @@ if [ $build -eq 1 ]; then
     ## -----------------------
 
     if [ $cleanup -eq 1 ]; then
-	echo "Cleaning up temposrary files"
+
+	if [ $verbose -eq 1 ]; then
+	    echo "Cleaning up temposrary files"
+	fi
+	
 	rm "$output"
     fi
 
@@ -451,7 +589,11 @@ fi
 ## CLEANUP TEMPORARY FILES IN DEPENDENCIES
 ## ---------------------------------------
 
-echo "Cleaning up temporary files in dependencies directories"
+if [ $verbose -eq 1 ]; then
+
+    echo "Cleaning up temporary files in dependencies directories"
+
+fi
 
 ## Remove temporary build files in RDFBones core ontology
 
