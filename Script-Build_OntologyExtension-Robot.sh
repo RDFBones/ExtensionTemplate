@@ -176,6 +176,10 @@ if [ $build -eq 1 ]; then
     robot merge --input results/merged.owl \
 	  --input results/template_DataItems.owl \
 	  --output results/merged.owl
+
+    robot merge --input results/extension.owl \
+	  --input results/template_DataItems.owl \
+	  --output results/extension.owl
     
 
     ## Create data sets
