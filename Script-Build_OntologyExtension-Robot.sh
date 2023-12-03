@@ -1,13 +1,27 @@
 #! /bin/bash
 
+## META DATA
+## =========
+
+export title="RDFBones ontology extension template"
+export shortname="template"
+export version="0.1"
+export ontology_iri="http://w3id.org/rdfbones/ext/template/latest/template.owl"
+export version_iri="http://w3id.org/rdfbones/ext/template/v0-1/template.owl"
+export creator="Felix Engel"
+export contributors="Stefan Schlager, Lukas Bender"
+export description="Extensions to the RDFBones core ontology are written to implement data structures representing osteological reseearch data in biological anthropology. The RDFBones ontology extension template provides a repository outline to help researchers embarking on the creation of an ontology extension. This output is dummy content proving that the template is operational and demonstrating how it is to be used. Authors of ontology extensions need to replace the dummy content with the information they intend to model in order to receive the desired outcome."
+export comment="This is a dummy for an ontology extending the RDFBones core ontology. It is not intended for productivity but to demonstrate how the template for RDFBones ontology extensions works."
+
+
 
 ## VARIABLES
 ## =========
 
-cleanup=0
-update=0
-build=0
-full=0
+export cleanup=0
+export update=0
+export build=0
+export full=0
 
 
 ## USAGE FUNCTION
@@ -378,17 +392,16 @@ if [ $build -eq 1 ]; then
 
     robot annotate --input "$output" \
 	  --remove-annotations \
-	  --ontology-iri "http://w3id.org/rdfbones/ext/template/latest/template.owl" \
-	  --version-iri "http://w3id.org/rdfbones/ext/template/v0-1/template.owl" \
-	  --annotation owl:versionInfo "0.1" \
-	  --language-annotation rdfs:label "RDFBones ontology extension template" en \
-	  --language-annotation rdfs:comment "This is a dummy for an ontology extending the RDFBones core ontology. It is not intended for productivity but to demonstrate how the template for RDFBones ontology extensions works." en \
-	  --annotation dc:creator "Felix Engel" \
-	  --annotation dc:contributor "Stefan Schlager" \
-	  --annotation dc:contributor "Lukas Bender" \
-	  --language-annotation dc:description "Extensions to the RDFBones core ontology are written to implement data structures representing osteological reseearch data in biological anthropology. The RDFBones ontology extension template provides a repository outline to help researchers embarking on the creation of an ontology extension. This output is dummy content proving that the template is operational and demonstrating how it is to be used. Authors of ontology extensions need to replace the dummy content with the information they intend to model in order to receive the desired outcome." en \
-	  --language-annotation dc:title "RDFBones ontology extension template" en \
-	  --output template.owl
+	  --ontology-iri "${ontology_iri}" \
+	  --version-iri "${version_iri}" \
+	  --annotation owl:versionInfo "${version}" \
+	  --language-annotation rdfs:label "${title}" en \
+	  --language-annotation rdfs:comment "${comment}" en \
+	  --annotation dc:creator "${creator}" \
+	  --annotation dc:contributor "${contributors}" \
+	  --language-annotation dc:description "${description}" en \
+	  --language-annotation dc:title "${title}" en \
+	  --output $shortname.owl
 
     ## Change annotations to describe your extension and change file name in the final output statement.
     ## *************************************************************************************************
